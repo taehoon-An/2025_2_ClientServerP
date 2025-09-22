@@ -8,7 +8,7 @@ package grpc.sample;
 message Student {
   string student_id = 1;
   string name = 2;
-  string departemt = 3;
+  string department = 3;
   repeated string completed_courses = 4;
 }
 
@@ -27,6 +27,13 @@ message CourseListResponse {
   repeated Course courses = 1;
 }
 
+message GetAllStudentRequest {
+
+}
+
+message GetAllCourseRequest {
+
+}
 
 service StudentService {
   rpc GetAllStudents (GetAllStudentRequest) returns (StudentListResponse) {};

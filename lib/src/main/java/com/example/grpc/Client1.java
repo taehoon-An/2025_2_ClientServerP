@@ -8,24 +8,17 @@ import java.util.concurrent.TimeUnit;
 
 public class Client1 {
     private final ManagedChannel channel;
-    private final NameServiceGrpc.NameServiceBlockingStub blockingStub;
+    private final StudentServiceGrpc.StudentServiceBlockingStub blockingStub;
 
     public Client1(String host, int port) {
         channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
                 .build();
-        blockingStub = NameServiceGrpc.newBlockingStub(channel); 
+        blockingStub = StudentServiceGrpc.newBlockingStub(channel); 
     }
 
     public void shutdown() throws InterruptedException {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
-    }
-
-    public void addName(String name) {
-        System.out.println(name + " add to server..");
-        NameRequest request = NameRequest.newBuilder().setName(name).build();
-        NameResponse response = blockingStub.addName(request); 
-        System.out.println("response to server \n" + response.getMessage());
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -33,7 +26,6 @@ public class Client1 {
         try {
         	Scanner ip = new Scanner(System.in);
         	System.out.printf("adding your name : ");
-            client.addName(ip.next());
         } finally {
             client.shutdown();
         }

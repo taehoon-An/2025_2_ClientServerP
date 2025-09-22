@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.compile.JavaCompile
+
 plugins {
     java
     application
@@ -51,3 +53,7 @@ application {
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }	
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
