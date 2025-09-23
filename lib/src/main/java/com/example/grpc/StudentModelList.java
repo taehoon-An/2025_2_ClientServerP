@@ -42,7 +42,8 @@ public class StudentModelList {
 	public Student addingStudents(String stuInfo) {
 		 	StringTokenizer stringTokenizer = new StringTokenizer(stuInfo);
 	    	String studentId = stringTokenizer.nextToken();
-	    	String name = stringTokenizer.nextToken();
+	    	String firstName = stringTokenizer.nextToken();
+	    	String lastName = stringTokenizer.nextToken();
 	    	String department = stringTokenizer.nextToken();
 	    	ArrayList<String> completedCoursesList = new ArrayList<String>();
 	    	while (stringTokenizer.hasMoreTokens()) {
@@ -51,7 +52,8 @@ public class StudentModelList {
 	    	
 	    	return Student.newBuilder()
             .setStudentId(studentId)
-            .setName(name)
+            .setFirstName(firstName)
+            .setLastName(lastName)
             .setDepartment(department)
             .addAllCompletedCourses(completedCoursesList)
             .build();
@@ -73,7 +75,8 @@ public class StudentModelList {
 	
 	public String getString(int number) {
         String stringReturn = vStudent.get(number).getStudentId() + " " + 
-        		vStudent.get(number).getName() + " " + vStudent.get(number).getDepartment();
+        		vStudent.get(number).getFirstName() + " " + vStudent.get(number).getLastName() 
+        		+ " " + vStudent.get(number).getDepartment();
         for (int i = 0; i < vStudent.get(number).getCompletedCoursesList().size(); i++) {
             stringReturn = stringReturn + " " + vStudent.get(number).getCompletedCoursesList().get(i).toString();
         }

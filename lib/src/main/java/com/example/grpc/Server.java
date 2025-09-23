@@ -10,20 +10,13 @@ import io.grpc.stub.StreamObserver;
 
 public class Server extends StudentServiceGrpc.StudentServiceImplBase {
 	private io.grpc.Server server;
-	 private final StudentModelList studentList;
-	 private final CourseModelList courseList;
 	
-	 public Server() throws IOException {
-	        this.studentList = StudentModelList.fromFile("Students.txt");
-	        this.courseList = CourseModelList.fromFile("Courses.txt");
-	        
-	        System.out.println("read file success : " + this.studentList.getString(0));
-	    }
+	public Server() {
+	}
 	
 	private void start(int port) throws IOException {
 		server = ServerBuilder.forPort(port)
-                .addService(new StudentServiceImpl(studentList)) 
-                .addService(new CourseServiceImpl(courseList))
+                .addService(new DataServiceImpl())
                 .build()
                 .start();
 	}

@@ -7,9 +7,10 @@ package grpc.sample;
 
 message Student {
   string student_id = 1;
-  string name = 2;
-  string department = 3;
-  repeated string completed_courses = 4;
+  string first_name = 2;
+  string last_name = 3;
+  string department = 4;
+  repeated string completed_courses = 5;
 }
 
 message StudentListResponse {
