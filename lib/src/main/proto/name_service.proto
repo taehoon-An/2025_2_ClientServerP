@@ -17,6 +17,14 @@ message StudentListResponse {
   repeated Student students = 1;
 }
 
+message StudentResponse {
+	
+}
+
+message DeleteStudentResponse {
+	bool isSDeleted = 1;
+}
+
 message Course {
   string course_id = 1;
   string name = 2;
@@ -28,6 +36,23 @@ message CourseListResponse {
   repeated Course courses = 1;
 }
 
+message CourseResponse{
+
+}
+
+message DeleteCourseResponse {
+	bool isCDeleted = 1;
+}
+
+message Account {
+	string ac_id = 1;
+	string ac_pw = 2;
+}
+
+message AccountResponse {
+	bool id_check = 1;
+}
+	
 message GetAllStudentRequest {
 
 }
@@ -36,8 +61,34 @@ message GetAllCourseRequest {
 
 }
 
+message GetAccountRequest {
+	Account account = 1;
+}
+
+message GetStudentRequest {
+	Student student = 1;
+}
+
+message GetCourseRequest{
+	Course course = 1;
+}
+
+message GetSelStudentIdRequest {
+	string student_id = 1;
+}
+
+message GetSelCourseIdRequest {
+	string course_id = 1;
+}
+
+
 service StudentService {
   rpc GetAllStudents (GetAllStudentRequest) returns (StudentListResponse) {};
   rpc GetAllCourses (GetAllCourseRequest) returns (CourseListResponse) {};
+  rpc SetAllStudents (GetStudentRequest) returns (StudentResponse) {};
+  rpc SetAllCourses (GetCourseRequest) returns (CourseResponse) {};
+  rpc DeleteStudent (GetSelStudentIdRequest) returns (DeleteStudentResponse) {};
+  rpc DeleteCourse (GetSelCourseIdRequest) returns (DeleteCourseResponse) {};
+  rpc CheckAccount (GetAccountRequest) returns (AccountResponse) {};
 }
 

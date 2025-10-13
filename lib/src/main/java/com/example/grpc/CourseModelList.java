@@ -1,8 +1,10 @@
 package com.example.grpc;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,8 +15,11 @@ import java.util.StringTokenizer;
 public class CourseModelList {
 	protected ArrayList<Course> vCourse;
 	
-	public CourseModelList(InputStream inputStream) throws FileNotFoundException, IOException {
-		BufferedReader objStudentFile = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+	private String crFileName;
+	
+	public CourseModelList(String fileName) throws FileNotFoundException, IOException  {
+		BufferedReader objStudentFile = new BufferedReader(new FileReader(fileName));
+		this.crFileName = fileName;
 		this.vCourse = new ArrayList<Course>();
 		while (objStudentFile.ready()) {
 			String crInfo = objStudentFile.readLine();
@@ -24,20 +29,6 @@ public class CourseModelList {
 		}
 		objStudentFile.close();
 	}
-	
-	 public static CourseModelList fromFile(String fileName) {
-	        try {
-	            InputStream inputStream = CourseModelList.class.getClassLoader().getResourceAsStream(fileName);
-	            if (inputStream == null) {
-	                throw new FileNotFoundException("cant read file to resource folder: " + fileName);
-	            }
-	            return new CourseModelList(inputStream);
-	        } catch (IOException e) {
-	            System.err.println(fileName + " create fail: " + e.getMessage());
-	           
-	        }
-	        return null;
-	    }
 	 
 	public Course addingCourses(String crInfo) {
 		 	StringTokenizer stringTokenizer = new StringTokenizer(crInfo);
@@ -56,9 +47,58 @@ public class CourseModelList {
             .addAllRelatedCourses(relatedCoursesList)
             .build();
 	}
+	
+	public Course addingCourses(GetCourseRequest request) {
+		String courseId = request.getCourse().getCourseId();
+    	String name = request.getCourse().getName();
+    	String courseName =  request.getCourse().getCourseName();
+    	ArrayList<String> relatedCoursesList = new ArrayList<String>();
+    	for(int i = 0; i < request.getCourse().getRelatedCoursesList().size(); i++) {
+    		relatedCoursesList.add(request.getCourse().getRelatedCoursesList().get(i));
+    	}
+		
+		return Course.newBuilder()
+            .setCourseId(courseId)
+            .setName(name)
+            .setCourseName(courseName)
+            .addAllRelatedCourses(relatedCoursesList)
+            .build();
+		
+	}
 
 	public ArrayList<Course> getAllCourseRecords() {
 		return this.vCourse;
+	}
+	
+	public boolean addCourseRecords(GetCourseRequest request) {
+		if(this.vCourse.add(addingCourses(request))) return writeToFile();
+		else return false;
+	}
+	
+	private boolean writeToFile() {
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(this.crFileName));
+			for(int i = 0; i < vCourse.size(); i++) {
+				writer.write(this.getString(i));
+				writer.newLine();
+				writer.newLine();
+			}
+			writer.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean deleteCourseRecords(GetSelCourseIdRequest request) {
+		for(int i = 0; i < this.vCourse.size(); i++) {
+			if(vCourse.get(i).getCourseId().equals(request.getCourseId())) {
+				this.vCourse.remove(i);
+				return writeToFile();
+			}
+		}
+		return false;
 	}
 
 	public boolean isRegisteredStudent(String sSID) {

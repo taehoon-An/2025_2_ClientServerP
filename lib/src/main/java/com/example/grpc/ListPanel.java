@@ -12,19 +12,27 @@ import javax.swing.SwingConstants;
 
 import com.example.grpc.StudentServiceGrpc.StudentServiceBlockingStub;
 
-public class CRPanel extends JPanel {
+public class ListPanel extends JPanel {
 	JButton sListBt;
 	JButton cListBt;
+	JButton plusStBt;
+	JButton plusCrBt;
+	JButton deleteStBt;
+	JButton deleteCrBt;
+	
+	CRFrame parentFrame;
+	
 	CRTextArea textArea;
 	
 	StudentServiceBlockingStub blockingStub;
 
-	public CRPanel() {
+	public ListPanel() {
 		LayoutManager bdLayout = new BorderLayout();
 		this.setLayout(bdLayout);
 		
 		JPanel buttonPanel = new JPanel(new FlowLayout());
-		defualtSetButtonPanel(buttonPanel);
+		JPanel PdBtPanel = new JPanel(new FlowLayout());
+		defualtSetButtonPanel(buttonPanel, PdBtPanel);
 		
 		this.textArea = new CRTextArea();
 
@@ -32,22 +40,35 @@ public class CRPanel extends JPanel {
 		
 		this.add(buttonPanel, BorderLayout.SOUTH);
 		this.add(scPane, BorderLayout.CENTER);
+		this.add(PdBtPanel, BorderLayout.NORTH);
 		
 		this.actionListener();
 		
 	}
 
-	private void defualtSetButtonPanel (JPanel btPanel) {
+	private void defualtSetButtonPanel (JPanel btPanel, JPanel pBtPanel) {
 		this.sListBt = new JButton("Print Students List");
 		this.cListBt = new JButton("Print Courses List");
+		
+		this.plusStBt = new JButton("+ Add Student");
+		this.plusCrBt = new JButton("+ Add Course");
+		this.deleteStBt = new JButton("- Delete Student");
+		this.deleteCrBt = new JButton("- Delete Course");
 		
 		
 		btPanel.add(sListBt);
 		btPanel.add(cListBt);
+		
+		pBtPanel.add(plusStBt);
+		pBtPanel.add(plusCrBt);
+		pBtPanel.add(deleteStBt);
+		pBtPanel.add(deleteCrBt);
+		
 	}
 	
-	public void init(StudentServiceBlockingStub blockingStub) {
+	public void init(StudentServiceBlockingStub blockingStub, CRFrame crFrame) {
 		this.blockingStub = blockingStub;
+		this.parentFrame = crFrame;
 	}
 	
 	public void actionListener() {
@@ -57,6 +78,52 @@ public class CRPanel extends JPanel {
 		
 		this.cListBt.addActionListener(e -> {
 			this.textArea.setText(getCoursesAsString());
+		});
+		
+		this.plusStBt.addActionListener(e -> {
+			PlusStDialog stDialog = new PlusStDialog(this.parentFrame);
+			
+			boolean tempOkCheck = stDialog.showDialog();
+			
+			if(tempOkCheck) {
+				this.blockingStub.setAllStudents(stDialog.getStudent());
+			}
+			this.textArea.setText(getStudentsAsString());
+		});
+		
+		this.plusCrBt.addActionListener(e -> {
+			PlusCrDialog crDialog = new PlusCrDialog(this.parentFrame);
+			
+			boolean tempOkCheck = crDialog.showDialog();
+			
+			if(tempOkCheck) {
+				this.blockingStub.setAllCourses(crDialog.getCourse());
+			}
+			this.textArea.setText(getCoursesAsString()); 
+		});
+		
+		this.deleteStBt.addActionListener(e -> {
+			DeleteStDialog dStDialog = new DeleteStDialog(this.parentFrame);
+			
+			boolean tempOkCheck = dStDialog.showDialog();
+			
+			if(tempOkCheck) {
+				this.blockingStub.deleteStudent(dStDialog.getStudentId());
+			}
+			
+			this.textArea.setText(getStudentsAsString());
+		});
+		
+		this.deleteCrBt.addActionListener(e -> {
+			DeleteCrDialog dCrDialog = new DeleteCrDialog(this.parentFrame);
+			
+			boolean tempOkCheck = dCrDialog.showDialog();
+			
+			if(tempOkCheck) {
+				this.blockingStub.deleteCourse(dCrDialog.getCourseId());
+			}
+			
+			this.textArea.setText(getCoursesAsString()); 
 		});
 	}
 
