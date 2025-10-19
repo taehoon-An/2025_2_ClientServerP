@@ -23,6 +23,7 @@ message StudentResponse {
 
 message DeleteStudentResponse {
 	bool isSDeleted = 1;
+	string message = 2;
 }
 
 message Course {
@@ -42,15 +43,45 @@ message CourseResponse{
 
 message DeleteCourseResponse {
 	bool isCDeleted = 1;
+	string message = 2;
 }
 
 message Account {
 	string ac_id = 1;
 	string ac_pw = 2;
+	string first_name = 3;
+	string last_name = 4;
+	string department = 5;
+	int32 ac_permiss = 6;
 }
 
-message AccountResponse {
-	bool id_check = 1;
+message CheckAccountResponse {
+	bool check = 1;
+	string message = 2;
+}
+
+message AddAccountResponse {
+	bool check = 1;
+	string message = 2;
+}
+
+message LoginResponse {
+	bool check = 1;
+	string access_token = 2;
+	string refresh_token = 3;
+	string ac_id = 4;
+	int32 ac_permiss = 5;
+	string ac_name = 6;
+	string message = 7;
+}
+
+message RefreshTokenResponse {
+  	string access_token = 1;
+}
+
+message ApplyCourseResponse {
+	bool isApplied = 1;
+	string message = 2;
 }
 	
 message GetAllStudentRequest {
@@ -61,7 +92,11 @@ message GetAllCourseRequest {
 
 }
 
-message GetAccountRequest {
+message CheckAccountRequest {
+	Account account = 1;
+}
+
+message AddAccountRequest {
 	Account account = 1;
 }
 
@@ -81,6 +116,21 @@ message GetSelCourseIdRequest {
 	string course_id = 1;
 }
 
+message LoginRequest {
+	string ac_id = 1;
+	string ac_pw = 2;
+}
+
+message RefreshTokenRequest {
+  	string refresh_token = 1;
+}
+
+message ApplyCourseReqeust {
+	string apply_acId = 1;
+	string apply_acName = 2;
+	repeated string apply_courses = 3;
+}
+
 
 service StudentService {
   rpc GetAllStudents (GetAllStudentRequest) returns (StudentListResponse) {};
@@ -89,6 +139,10 @@ service StudentService {
   rpc SetAllCourses (GetCourseRequest) returns (CourseResponse) {};
   rpc DeleteStudent (GetSelStudentIdRequest) returns (DeleteStudentResponse) {};
   rpc DeleteCourse (GetSelCourseIdRequest) returns (DeleteCourseResponse) {};
-  rpc CheckAccount (GetAccountRequest) returns (AccountResponse) {};
+  rpc CheckSignUpAccount (CheckAccountRequest) returns (CheckAccountResponse) {};
+  rpc AddAccount (AddAccountRequest) returns (AddAccountResponse) {};
+  rpc Login (LoginRequest) returns (LoginResponse) {};
+  rpc RefreshAccessToken(RefreshTokenRequest) returns (RefreshTokenResponse) {};
+  rpc ApplyCourse (ApplyCourseReqeust) returns (ApplyCourseResponse) {}; 
 }
 

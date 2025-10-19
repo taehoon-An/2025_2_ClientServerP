@@ -19,9 +19,16 @@ dependencies {
     implementation("io.grpc:grpc-stub:$grpcVersion")
     implementation("com.google.protobuf:protobuf-java:$protobufVersion")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation("org.springframework.security:spring-security-crypto:6.2.0")
+    implementation("commons-logging:commons-logging:1.2")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    implementation("io.grpc:grpc-services:$grpcVersion")
+    
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 }
 
 protobuf {

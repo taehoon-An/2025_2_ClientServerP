@@ -82,7 +82,7 @@ public class StudentModelList {
 		else return false;
 	}
 	
-	private boolean writeToFile() {
+	public boolean writeToFile() {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(this.stFileName));
 			for(int i = 0; i < vStudent.size(); i++) {
